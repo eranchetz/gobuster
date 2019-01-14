@@ -11,6 +11,8 @@ import (
 
 	"github.com/OJ/gobuster/v3/libgobuster"
 	"github.com/google/uuid"
+
+	. "github.com/logrusorgru/aurora"
 )
 
 // GobusterDir is the main type to implement the interface
@@ -125,13 +127,14 @@ func (d *GobusterDir) ResultToString(r *libgobuster.Result) (*string, error) {
 	buf := &bytes.Buffer{}
 
 	// Prefix if we're in verbose mode
-	if d.globalopts.Verbose {
-		if d.options.StatusCodesParsed.Contains(r.Status) {
-			if _, err := fmt.Fprintf(buf, "Found: "); err != nil {
+
+	if g.Opts.Verbose {
+		if g.Opts.StatusCodesParsed.Contains(r.Status) {
+			if _, err := fmt.Fprintf(buf, Sprintf(Green("Found: "))); err != nil {
 				return nil, err
 			}
 		} else {
-			if _, err := fmt.Fprintf(buf, "Missed: "); err != nil {
+			if _, err := fmt.Fprintf(buf, Sprintf(Red("Missed: "))); err != nil {
 				return nil, err
 			}
 		}
@@ -151,8 +154,12 @@ func (d *GobusterDir) ResultToString(r *libgobuster.Result) (*string, error) {
 			return nil, err
 		}
 
-		if !d.options.NoStatus {
-			if _, err := fmt.Fprintf(buf, " (Status: %d)", r.Status); err != nil {
+		if !g.Opts.NoStatus {
+			statusWithColor := Sprintf(Brown(r.Status))
+			if r.Status == 200 {
+				statusWithColor = Sprintf(Green(r.Status))
+			}
+			if _, err := fmt.Fprintf(buf, " (Status: %s)", statusWithColor); err != nil {
 				return nil, err
 			}
 		}
