@@ -134,7 +134,7 @@ func (d *GobusterDir) ResultToString(r *libgobuster.Result) (*string, error) {
 				return nil, err
 			}
 		} else {
-			if _, err := fmt.Fprintf(buf, Sprintf(Red("Missed: "))); err != nil {
+			if _, err := fmt.Fprintf(buf, Sprintf(Brown("Missed: "))); err != nil {
 				return nil, err
 			}
 		}
@@ -155,10 +155,7 @@ func (d *GobusterDir) ResultToString(r *libgobuster.Result) (*string, error) {
 		}
 
 		if !g.Opts.NoStatus {
-			statusWithColor := Sprintf(Brown(r.Status))
-			if r.Status == 200 {
-				statusWithColor = Sprintf(Green(r.Status))
-			}
+			statusWithColor := Sprintf(Green(r.Status))
 			if _, err := fmt.Fprintf(buf, " (Status: %s)", statusWithColor); err != nil {
 				return nil, err
 			}
